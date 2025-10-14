@@ -1,2 +1,1 @@
-# The-simple-avtomat
-phansi
+основа на которой буду строить все...
