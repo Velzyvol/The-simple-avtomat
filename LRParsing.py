@@ -1,3 +1,7 @@
+#>>floor python-3-11-4
+
+#Грамматика должна удовлетворять условиям LR(0) грамматик.
+
 from Symbols import *
 
 class SymbolSet:
@@ -117,13 +121,14 @@ class LRSituation:
                 return True
         return False
 class LRState:
-    def __init__(self):
+    def __init__(self,sid=0):
         self.Situation=LRSituation()
         self.Direct=SymbolAssocList()
+        self.id=sid
 class LRMashin:
     def __init__(self,grammar):
         self.States=[]
-        state0=LRState()
+        state0=LRState(sid=0)
         state0.Situation=grammar.clone()
         self.States.append(state0)
         newStates=[]
@@ -136,7 +141,7 @@ class LRMashin:
                     sit=tstate.Situation.next(sign)
                     fstate=self.findState(sit)
                     if fstate==None:
-                        fstate=LRState()
+                        fstate=LRState(sid=len(self.States))
                         fstate.Situation=sit
                         tstate.Direct.Input(sign,fstate)
                         self.States.append(fstate)
@@ -175,6 +180,10 @@ def rule(strrule):
     return rul
 
 
+
+"""
+pyast
+
 sit=LRSituation()
 sit.add(rule('S:.()'))
 sit.add(rule('S:.(`S)'))
@@ -184,8 +193,6 @@ mash=LRMashin(sit)
 
 for x in mash.States:
     print(x.Situation)
-"""
-pyast
 
 !x!y in ADD @obj f(x+'+'+y)=obj and obj.left=f(x) and obj.right=f(y)
 
@@ -210,6 +217,7 @@ for x,y in ADD:
     obj.left=f(x)
     obj.right=f(y)
     obj.text=x+'+'+y
+    
     degression for "N" to "M"
 
 for x in names:
