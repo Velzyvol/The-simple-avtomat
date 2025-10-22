@@ -65,7 +65,7 @@ jmp=dict()
 
 sit=LRSituation()
 sit.add(rule('S:.()'))
-sit.add(rule('S:.`S()'))
+sit.add(rule('S:.`S`S'))
 sit.add(rule('S:.(`S)'))
 
 

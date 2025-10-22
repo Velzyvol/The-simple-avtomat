@@ -69,11 +69,13 @@ class LR0Avtomat:
             if self.is_end_state(self.state):
                 if not self.reduce(self.get_decs(),self.get_product()):
                     return False
+                print("reduce")
             else:
                 if self.index==len(text):
                     return False
                 if not self.shift(text[self.index]):
                     return False
+                print("shift")
             if len(text)==self.index and len(self.stack)==1:
                 break
                 
@@ -84,7 +86,10 @@ class LR0Avtomat:
         if not flag:
             lnt=len(self.terminal[state])
             pos=lnt//2
+            print("find")
             while True:
+                print("state",state)
+                print("pos",pos)
                 lnt=lnt//2
                 dx=contains(char,self.terminal[state][pos])
                 if dx==0:
@@ -100,6 +105,8 @@ class LR0Avtomat:
             lnt=len(self.noterminal[state])
             pos=lnt//2
             while True:
+                print("nstate",state)
+                print("npos",pos)
                 lnt=lnt//2
                 dx=contains(char,self.noterminal[state][pos])
                 if dx==0:

@@ -65,7 +65,7 @@ class LRRule:
                 result+=self.Stages[i].__str__()
 
         return result
-    
+
 class LRSituation:
     #Rules
     def __init__(self):
@@ -120,29 +120,64 @@ class LRSituation:
             if r.endStage():
                 return True
         return False
+    def get_next_products(self):
+        noterm=set()
+        for rl in self.Rules:
+            if not rl.endStage():
+                smbl=rl.Stages[rl.Point]
+                if is_terminal(smbl):
+                    noterm=noterm|{chr(first_char(smbl))}
+        return noterm
+    def get_rules(self,noterminal='S'):
+        res=[]
+        for rl in self.Rules:
+            if chr(first_char(rl.Product))==noterminal:
+                res.append(rl)
+        return res
+    def add_list(self,rlist):
+        for rl in rlist:
+            if not self.contains(rl):
+                self.add(rl.Clone())
+    def closure(self,grammar):
+        sntm=set()
+        
+        while True:
+            ntrm=self.get_next_products()
+            isec=ntrm-sntm
+            for noterm in isec:
+                rls=grammar.get_rules(noterm)
+                self.add_list(rls)
+                
+            sntm=ntrm
+            if len(isec)==0:
+                break
 class LRState:
     def __init__(self,sid=0):
         self.Situation=LRSituation()
         self.Direct=SymbolAssocList()
         self.id=sid
+        self.define=False
 class LRMashin:
     def __init__(self,grammar):
         self.States=[]
         state0=LRState(sid=0)
         state0.Situation=grammar.clone()
         self.States.append(state0)
+        self.States[0].Situation.closure(grammar)
         newStates=[]
         index=0
-        while index<len(self.States):
+        while index<len(self.States):          
             tstate=self.States[index]
             if not tstate.Situation.final():
                 signset=tstate.Situation.nextSet()
                 for sign in signset:
                     sit=tstate.Situation.next(sign)
+                    sit.closure(grammar)
                     fstate=self.findState(sit)
                     if fstate==None:
                         fstate=LRState(sid=len(self.States))
                         fstate.Situation=sit
+                        
                         tstate.Direct.Input(sign,fstate)
                         self.States.append(fstate)
                     else:

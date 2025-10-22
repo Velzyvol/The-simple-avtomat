@@ -150,4 +150,19 @@ def interval(left=0,right=0,terminal=False):
     sintr=SymbolInterval(s1,s2)
     return sintr
 
+def is_terminal(smbl):
+    if type(smbl) is Symbol:
+        return smbl.Terminal
+    elif type(smbl) is SymbolInterval:
+        return smbl.Left.Terminal
+    else:
+        return False
+
+def first_char(smbl):
+    if type(smbl) is Symbol:
+        return smbl.Value
+    elif type(smbl) is SymbolInterval:
+        return smbl.Left.Value
+    
+
 
