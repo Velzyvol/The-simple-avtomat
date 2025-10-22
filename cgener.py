@@ -64,10 +64,9 @@ def mashin_on_python_tableparse(mashin,pref='0'):
 jmp=dict()
 
 sit=LRSituation()
-sit.add(rule('S:.()'))
-sit.add(rule('S:.`S`S'))
-sit.add(rule('S:.(`S)'))
-
+sit.add(rule('E:.()'))
+sit.add(rule('E:.`E`E'))
+sit.add(rule('E:.(`E)'))
 
 mash=LRMashin(sit)
 
@@ -78,6 +77,7 @@ for i in range(len(mash.States)):
     
 
 print(mashin_on_python_tableparse(mash))
+
 
 
 

@@ -88,7 +88,7 @@ class LRSituation:
             return True
         return False
     def add(self,rule):
-        self.Rules.append(rule)
+        self.Rules.append(rule.Clone())
     def __ne__(self,val):
         return self.__eq__(self,val)
     def next(self,sign):
@@ -128,15 +128,16 @@ class LRSituation:
                 if is_terminal(smbl):
                     noterm=noterm|{chr(first_char(smbl))}
         return noterm
-    def get_rules(self,noterminal='S'):
+    def get_rules(self,noterminal='S',ignorelist={'S'}):
         res=[]
         for rl in self.Rules:
             if chr(first_char(rl.Product))==noterminal:
+                #if not( is_terminal(rl.Stages[rl.Point]) and chr(first_char(rl.Stages[rl.Point])) in ignorelist):
                 res.append(rl)
         return res
     def add_list(self,rlist):
         for rl in rlist:
-            if not self.contains(rl):
+            if not self.contains(rl) and first_char(rl.Product):        
                 self.add(rl.Clone())
     def closure(self,grammar):
         sntm=set()
@@ -145,7 +146,7 @@ class LRSituation:
             ntrm=self.get_next_products()
             isec=ntrm-sntm
             for noterm in isec:
-                rls=grammar.get_rules(noterm)
+                rls=grammar.get_rules(noterm,{noterm})
                 self.add_list(rls)
                 
             sntm=ntrm
@@ -195,17 +196,17 @@ class LRMashin:
 
 def rule(strrule):
     rul=LRRule()
-    rul.product=strrule[0]
+    rul.Product=symbol(strrule[0],True)
     if len(strrule)==4:
         rul.Stages.append(symbol(strrule[4]))
         rul.Point=0
     else:
-        rul.point=0
+        rul.Point=0
         rul.Stages=[]
         flg=False
         for i in range(len(strrule)-2):
             if(strrule[i+2]=='.'):
-                rul.point=len(rul.Stages)
+                rul.Point=len(rul.Stages)
             else:
                 if(strrule[i+2]=='`'):
                     flg=True
