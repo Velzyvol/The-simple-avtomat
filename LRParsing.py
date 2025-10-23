@@ -1,6 +1,7 @@
 #>>floor python-3-11-4
 
 #Грамматика должна удовлетворять условиям LR(0) грамматик.
+#Запрещено использовать интервал нетерминалов
 
 from Symbols import *
 
@@ -94,7 +95,7 @@ class LRSituation:
     def next(self,sign):
         result=LRSituation()
         for rul in self.Rules:
-            if(rul.Stages[rul.Point]==sign):
+            if(type(rul.Stages[rul.Point])==type(sign)and(rul.Stages[rul.Point]==sign)):
                 clrul=rul.Clone()
                 clrul.Point+=1
                 result.Rules.append(clrul)

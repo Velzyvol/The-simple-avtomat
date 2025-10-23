@@ -18,7 +18,7 @@ def inputtabs(count,text):
     for i in range(len(lines)):
         res+=lines[i]+'\n'
     return res    
-#Тут возврощаем код питона после исполнения препроцессором
+#Тут возврощаем код питона, после исполнения препроцессором.
 def mashin_on_python_tableparse(mashin,pref='0'):
     #{(flag,term):stateid}
     code="avtomat=LR0Avtomat()"'\n'
@@ -60,14 +60,29 @@ def mashin_on_python_tableparse(mashin,pref='0'):
     return code
 
 
+#?>> tower decent path -bottom 
+
+
 
 jmp=dict()
 
 sit=LRSituation()
-sit.add(rule('E:.()'))
-sit.add(rule('E:.`E`E'))
-sit.add(rule('E:.(`E)'))
 
+rl=LRRule()
+rl.Product=symbol('E',True)
+rl.Stages=[]
+rl.Stages.append(symbol('E',True))
+rl.Stages.append(interval('a','z',False))
+sit.add(rl)
+print(rl)
+rl=LRRule()
+rl.Product=symbol('E',True)
+rl.Stages=[]
+rl.Stages.append(interval('a','z',False))
+
+sit.add(rl)
+
+print(rl)
 mash=LRMashin(sit)
 
 
